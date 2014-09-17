@@ -1,11 +1,11 @@
 function json_decode(str_json) {
-  // From: http://phpjs.org/functions
-  // +      original by: Public Domain (http://www.json.org/json2.js)
-  // + reimplemented by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-  // +      improved by: T.J. Leahy
-  // +      improved by: Michael White
-  // *        example 1: json_decode('[ 1 ]');
-  // *        returns 1: [1]
+  //       discuss at: http://phpjs.org/functions/json_decode/
+  //      original by: Public Domain (http://www.json.org/json2.js)
+  // reimplemented by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+  //      improved by: T.J. Leahy
+  //      improved by: Michael White
+  //        example 1: json_decode('[ 1 ]');
+  //        returns 1: [1]
 
   /*
     http://www.JSON.org/json2.js
@@ -24,7 +24,8 @@ function json_decode(str_json) {
         throw new Error('Unexpected error type in json_decode()');
       }
       this.php_js = this.php_js || {};
-      this.php_js.last_error_json = 4; // usable by json_last_error()
+      // usable by json_last_error()
+      this.php_js.last_error_json = 4;
       return null;
     }
   }
@@ -38,8 +39,10 @@ function json_decode(str_json) {
   // incorrectly, either silently deleting them, or treating them as line endings.
   cx.lastIndex = 0;
   if (cx.test(text)) {
-    text = text.replace(cx, function(a) {
-      return '\\u' + ('0000' + a.charCodeAt(0).toString(16)).slice(-4);
+    text = text.replace(cx, function (a) {
+      return '\\u' + ('0000' + a.charCodeAt(0)
+        .toString(16))
+        .slice(-4);
     });
   }
 
@@ -54,10 +57,10 @@ function json_decode(str_json) {
   // open brackets that follow a colon or comma or that begin the text. Finally,
   // we look to see that the remaining characters are only whitespace or ']' or
   // ',' or ':' or '{' or '}'. If that is so, then the text is safe for eval.
-  if ((/^[\],:{}\s]*$/).
-      test(text.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, '@').
-      replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
-      replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
+  if ((/^[\],:{}\s]*$/)
+    .test(text.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, '@')
+      .replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']')
+      .replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
 
     // In the third stage we use the eval function to compile the text into a
     // JavaScript structure. The '{' operator is subject to a syntactic ambiguity
@@ -69,6 +72,7 @@ function json_decode(str_json) {
   }
 
   this.php_js = this.php_js || {};
-  this.php_js.last_error_json = 4; // usable by json_last_error()
+  // usable by json_last_error()
+  this.php_js.last_error_json = 4;
   return null;
 }

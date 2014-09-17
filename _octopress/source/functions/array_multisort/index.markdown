@@ -15,146 +15,111 @@ alias:
 A JavaScript equivalent of PHP's array_multisort
 
 {% codeblock array/array_multisort.js lang:js https://raw.github.com/kvz/phpjs/master/functions/array/array_multisort.js raw on github %}
-function array_multisort (arr) {
-  // +   original by: Theriault
-  // *     example 1: array_multisort([1, 2, 1, 2, 1, 2], [1, 2, 3, 4, 5, 6]);
-  // *     returns 1: true
-  // *     example 2: characters = {A: 'Edward', B: 'Locke', C: 'Sabin', D: 'Terra', E: 'Edward'};
-  // *     example 2: jobs = {A: 'Warrior', B: 'Thief', C: 'Monk', D: 'Mage', E: 'Knight'};
-  // *     example 2: array_multisort(characters, 'SORT_DESC', 'SORT_STRING', jobs, 'SORT_ASC', 'SORT_STRING');
-  // *     returns 2: true
-  // *     results 2: characters == {D: 'Terra', C: 'Sabin', B: 'Locke', E: 'Edward', A: 'Edward'};
-  // *     results 2: jobs == {D: 'Mage', C: 'Monk', B: 'Thief', E: 'Knight', A: 'Warrior'};
-  // *     example 3: lastnames = [ 'Carter','Adams','Monroe','Tyler','Madison','Kennedy','Adams'];
-  // *     example 3: firstnames = ['James', 'John' ,'James', 'John', 'James',  'John',   'John'];
-  // *     example 3: president = [ 39,      6,      5,       10,     4,       35,        2    ];
-  // *     example 3: array_multisort(firstnames, 'SORT_DESC', 'SORT_STRING', lastnames, 'SORT_ASC', 'SORT_STRING', president, 'SORT_NUMERIC');
-  // *     returns 3: true
-  // *     results 3: firstnames == ['John', 'John', 'John',   'John', 'James', 'James',  'James'];
-  // *     results 3: lastnames ==  ['Adams','Adams','Kennedy','Tyler','Carter','Madison','Monroe'];
-  // *     results 3: president ==  [2,      6,      35,       10,     39,       4,       5];
-  // Fix: this function must be fixed like asort(), etc., to return a (shallow) copy by default, since IE does not support!
-  // VARIABLE DESCRIPTIONS
-  //
-  // flags: Translation table for sort arguments. Each argument turns on certain bits in the flag byte through addition.
-  //        bits:    HGFE DCBA
-  //        bit A: Only turned on if SORT_NUMERIC was an argument.
-  //        bit B: Only turned on if SORT_STRING was an argument.
-  //        bit C: Reserved bit for SORT_ASC; not turned on.
-  //        bit D: Only turned on if SORT_DESC was an argument.
-  //        bit E: Turned on if either SORT_REGULAR, SORT_NUMERIC, or SORT_STRING was an argument. If already turned on, function would return FALSE like in PHP.
-  //        bit F: Turned on if either SORT_ASC or SORT_DESC was an argument. If already turned on, function would return FALSE like in PHP.
-  //        bit G and H: (Unused)
-  //
-  // sortFlag: Holds sort flag byte of every array argument.
-  //
-  // sortArrs: Holds the values of array arguments.
-  //
-  // sortKeys: Holds the keys of object arguments.
-  //
-  // nLastSort: Holds a copy of the current lastSort so that the lastSort is not destroyed
-  //
-  // nLastSort: Holds a copy of the current lastSort so that the lastSort is not destroyed
-  //
-  // args: Holds pointer to arguments for reassignment
-  //
-  // lastSort: Holds the last Javascript sort pattern to duplicate the sort for the last sortComponent.
-  //
-  // lastSorts: Holds the lastSort for each sortComponent to duplicate the sort of each component on each array.
-  //
-  // tmpArray: Holds a copy of the last sortComponent's array elements to reiterate over the array
-  //
-  // elIndex: Holds the index of the last sortComponent's array elements to reiterate over the array
-  //
-  // sortDuplicator: Function for duplicating previous sort.
-  //
-  // sortRegularASC: Function for sorting regular, ascending.
-  //
-  // sortRegularDESC: Function for sorting regular, descending.
-  //
-  // thingsToSort: Holds a bit that indicates which indexes in the arrays can be sorted. Updated after every array is sorted.
-  var argl = arguments.length,
-    sal = 0,
-    flags = {
-      'SORT_REGULAR': 16,
-      'SORT_NUMERIC': 17,
-      'SORT_STRING': 18,
-      'SORT_ASC': 32,
-      'SORT_DESC': 40
-    },
-    sortArrs = [
-      []
-    ],
-    sortFlag = [0],
-    sortKeys = [
-      []
-    ],
-    g = 0,
-    i = 0,
-    j = 0,
-    k = '',
-    l = 0,
-    thingsToSort = [],
-    vkey = 0,
-    zlast = null,
-    args = arguments,
-    nLastSort = [],
-    lastSort = [],
-    lastSorts = [],
-    tmpArray = [],
-    elIndex = 0,
-    sortDuplicator = function (a, b) {
-      return nLastSort.shift();
-    },
-    sortFunctions = [
-      [function (a, b) {
+function array_multisort(arr) {
+  //  discuss at: http://phpjs.org/functions/array_multisort/
+  // original by: Theriault
+  //   example 1: array_multisort([1, 2, 1, 2, 1, 2], [1, 2, 3, 4, 5, 6]);
+  //   returns 1: true
+  //   example 2: characters = {A: 'Edward', B: 'Locke', C: 'Sabin', D: 'Terra', E: 'Edward'};
+  //   example 2: jobs = {A: 'Warrior', B: 'Thief', C: 'Monk', D: 'Mage', E: 'Knight'};
+  //   example 2: array_multisort(characters, 'SORT_DESC', 'SORT_STRING', jobs, 'SORT_ASC', 'SORT_STRING');
+  //   returns 2: true
+  //   example 3: lastnames = [ 'Carter','Adams','Monroe','Tyler','Madison','Kennedy','Adams'];
+  //   example 3: firstnames = ['James', 'John' ,'James', 'John', 'James',  'John',   'John'];
+  //   example 3: president = [ 39,      6,      5,       10,     4,       35,        2    ];
+  //   example 3: array_multisort(firstnames, 'SORT_DESC', 'SORT_STRING', lastnames, 'SORT_ASC', 'SORT_STRING', president, 'SORT_NUMERIC');
+  //   returns 3: true
+  //       flags: Translation table for sort arguments. Each argument turns on certain bits in the flag byte through addition.
+  //        bits: HGFE DCBA
+  //        args: Holds pointer to arguments for reassignment
+
+  var g, i, j, k, l, sal, vkey, elIndex, lastSorts, tmpArray, zlast;
+
+  var sortFlag = [0];
+  var thingsToSort = [];
+  var nLastSort = [];
+  var lastSort = [];
+  var args = arguments; // possibly redundant
+
+  var flags = {
+    'SORT_REGULAR': 16,
+    'SORT_NUMERIC': 17,
+    'SORT_STRING': 18,
+    'SORT_ASC': 32,
+    'SORT_DESC': 40
+  };
+
+  var sortDuplicator = function(a, b) {
+    return nLastSort.shift();
+  };
+
+  var sortFunctions = [
+    [
+
+      function(a, b) {
         lastSort.push(a > b ? 1 : (a < b ? -1 : 0));
         return a > b ? 1 : (a < b ? -1 : 0);
-      }, function (a, b) {
+      },
+      function(a, b) {
         lastSort.push(b > a ? 1 : (b < a ? -1 : 0));
         return b > a ? 1 : (b < a ? -1 : 0);
-      }],
-      [function (a, b) {
+      }
+    ],
+    [
+
+      function(a, b) {
         lastSort.push(a - b);
         return a - b;
-      }, function (a, b) {
+      },
+      function(a, b) {
         lastSort.push(b - a);
         return b - a;
-      }],
-      [function (a, b) {
+      }
+    ],
+    [
+
+      function(a, b) {
         lastSort.push((a + '') > (b + '') ? 1 : ((a + '') < (b + '') ? -1 : 0));
         return (a + '') > (b + '') ? 1 : ((a + '') < (b + '') ? -1 : 0);
-      }, function (a, b) {
+      },
+      function(a, b) {
         lastSort.push((b + '') > (a + '') ? 1 : ((b + '') < (a + '') ? -1 : 0));
         return (b + '') > (a + '') ? 1 : ((b + '') < (a + '') ? -1 : 0);
-      }]
-    ];
+      }
+    ]
+  ];
+
+  var sortArrs = [
+    []
+  ];
+
+  var sortKeys = [
+    []
+  ];
 
   // Store first argument into sortArrs and sortKeys if an Object.
   // First Argument should be either a Javascript Array or an Object, otherwise function would return FALSE like in PHP
   if (Object.prototype.toString.call(arr) === '[object Array]') {
     sortArrs[0] = arr;
-  }
-  else if (arr && typeof arr === 'object') {
+  } else if (arr && typeof arr === 'object') {
     for (i in arr) {
       if (arr.hasOwnProperty(i)) {
         sortKeys[0].push(i);
         sortArrs[0].push(arr[i]);
       }
     }
-  }
-  else {
+  } else {
     return false;
   }
-
 
   // arrMainLength: Holds the length of the first array. All other arrays must be of equal length, otherwise function would return FALSE like in PHP
   //
   // sortComponents: Holds 2 indexes per every section of the array that can be sorted. As this is the start, the whole array can be sorted.
-  var arrMainLength = sortArrs[0].length,
-    sortComponents = [0, arrMainLength];
+  var arrMainLength = sortArrs[0].length;
+  var sortComponents = [0, arrMainLength];
 
   // Loop through all other arguments, checking lengths and sort flags of arrays and adding them to the above variables.
+  var argl = arguments.length;
   for (j = 1; j < argl; j++) {
     if (Object.prototype.toString.call(arguments[j]) === '[object Array]') {
       sortArrs[j] = arguments[j];
@@ -177,7 +142,8 @@ function array_multisort (arr) {
       }
     } else if (typeof arguments[j] === 'string') {
       var lFlag = sortFlag.pop();
-      if (typeof flags[arguments[j]] === 'undefined' || ((((flags[arguments[j]]) >>> 4) & (lFlag >>> 4)) > 0)) { // Keep extra parentheses around latter flags check to avoid minimization leading to CDATA closer
+      // Keep extra parentheses around latter flags check to avoid minimization leading to CDATA closer
+      if (typeof flags[arguments[j]] === 'undefined' || ((((flags[arguments[j]]) >>> 4) & (lFlag >>> 4)) > 0)) {
         return false;
       }
       sortFlag.push(lFlag + flags[arguments[j]]);
@@ -185,7 +151,6 @@ function array_multisort (arr) {
       return false;
     }
   }
-
 
   for (i = 0; i !== arrMainLength; i++) {
     thingsToSort.push(true);
@@ -200,7 +165,7 @@ function array_multisort (arr) {
       nLastSort = [];
       lastSort = [];
 
-      // If ther are no sortComponents, then no more sorting is neeeded. Copy the array back to the argument.
+      // If there are no sortComponents, then no more sorting is neeeded. Copy the array back to the argument.
       if (sortComponents.length === 0) {
         if (Object.prototype.toString.call(arguments[i]) === '[object Array]') {
           args[i] = sortArrs[i];
@@ -313,8 +278,7 @@ function array_multisort (arr) {
       }
       if (Object.prototype.toString.call(arguments[i]) === '[object Array]') {
         args[i] = sortArrs[i];
-      }
-      else {
+      } else {
         for (j in arguments[i]) {
           if (arguments[i].hasOwnProperty(j)) {
             delete arguments[i][j];
@@ -347,44 +311,6 @@ functions that are far from perfect, in the hopes to spark better contributions.
 Do you have one? Then please just: 
 
  - [Edit on GitHub](https://github.com/kvz/phpjs/edit/master/functions/array/array_multisort.js)
-
-### Example 1
-This code
-{% codeblock lang:js example %}
-array_multisort([1, 2, 1, 2, 1, 2], [1, 2, 3, 4, 5, 6]);
-{% endcodeblock %}
-
-Should return
-{% codeblock lang:js returns %}
-true
-{% endcodeblock %}
-
-### Example 2
-This code
-{% codeblock lang:js example %}
-characters = {A: 'Edward', B: 'Locke', C: 'Sabin', D: 'Terra', E: 'Edward'};
-jobs = {A: 'Warrior', B: 'Thief', C: 'Monk', D: 'Mage', E: 'Knight'};
-array_multisort(characters, 'SORT_DESC', 'SORT_STRING', jobs, 'SORT_ASC', 'SORT_STRING');
-{% endcodeblock %}
-
-Should return
-{% codeblock lang:js returns %}
-true
-{% endcodeblock %}
-
-### Example 3
-This code
-{% codeblock lang:js example %}
-lastnames = [ 'Carter','Adams','Monroe','Tyler','Madison','Kennedy','Adams'];
-firstnames = ['James', 'John' ,'James', 'John', 'James',  'John',   'John'];
-president = [ 39,      6,      5,       10,     4,       35,        2    ];
-array_multisort(firstnames, 'SORT_DESC', 'SORT_STRING', lastnames, 'SORT_ASC', 'SORT_STRING', president, 'SORT_NUMERIC');
-{% endcodeblock %}
-
-Should return
-{% codeblock lang:js returns %}
-true
-{% endcodeblock %}
 
 
 ### Other PHP functions in the array extension

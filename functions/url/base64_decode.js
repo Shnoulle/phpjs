@@ -1,26 +1,26 @@
 function base64_decode(data) {
-  // From: http://phpjs.org/functions
-  // +   original by: Tyler Akins (http://rumkin.com)
-  // +   improved by: Thunder.m
-  // +      input by: Aman Gupta
-  // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-  // +   bugfixed by: Onno Marsman
-  // +   bugfixed by: Pellentesque Malesuada
-  // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-  // +      input by: Brett Zamir (http://brett-zamir.me)
-  // +   bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-  // *     example 1: base64_decode('S2V2aW4gdmFuIFpvbm5ldmVsZA==');
-  // *     returns 1: 'Kevin van Zonneveld'
-  // mozilla has this native
-  // - but breaks in 2.0.0.12!
-  //if (typeof this.window['atob'] === 'function') {
-  //    return atob(data);
-  //}
+  //  discuss at: http://phpjs.org/functions/base64_decode/
+  // original by: Tyler Akins (http://rumkin.com)
+  // improved by: Thunder.m
+  // improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+  // improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+  //    input by: Aman Gupta
+  //    input by: Brett Zamir (http://brett-zamir.me)
+  // bugfixed by: Onno Marsman
+  // bugfixed by: Pellentesque Malesuada
+  // bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+  //   example 1: base64_decode('S2V2aW4gdmFuIFpvbm5ldmVsZA==');
+  //   returns 1: 'Kevin van Zonneveld'
+  //   example 2: base64_decode('YQ===');
+  //   returns 2: 'a'
+  //   example 3: base64_decode('4pyTIMOgIGxhIG1vZGU=');
+  //   returns 3: '✓ à la mode'
+
   var b64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
   var o1, o2, o3, h1, h2, h3, h4, bits, i = 0,
-      ac = 0,
-      dec = '',
-      tmp_arr = [];
+    ac = 0,
+    dec = '',
+    tmp_arr = [];
 
   if (!data) {
     return data;
@@ -28,7 +28,8 @@ function base64_decode(data) {
 
   data += '';
 
-  do { // unpack four hexets into three octets using index points in b64
+  do {
+    // unpack four hexets into three octets using index points in b64
     h1 = b64.indexOf(data.charAt(i++));
     h2 = b64.indexOf(data.charAt(i++));
     h3 = b64.indexOf(data.charAt(i++));
@@ -51,5 +52,5 @@ function base64_decode(data) {
 
   dec = tmp_arr.join('');
 
-  return dec;
+  return decodeURIComponent(escape(dec.replace(/\0+$/, '')));
 }

@@ -1,14 +1,16 @@
 function ctype_graph(text) {
-  // From: http://phpjs.org/functions
-  // +   original by: Brett Zamir (http://brett-zamir.me)
-  // -    depends on: setlocale
-  // *     example 1: ctype_graph('!%');
-  // *     returns 1: true
+  //  discuss at: http://phpjs.org/functions/ctype_graph/
+  // original by: Brett Zamir (http://brett-zamir.me)
+  //  depends on: setlocale
+  //   example 1: ctype_graph('!%');
+  //   returns 1: true
+
   if (typeof text !== 'string') {
     return false;
   }
   // BEGIN REDUNDANT
-  this.setlocale('LC_ALL', 0); // ensure setup of localization variables takes place
+  // ensure setup of localization variables takes place
+  this.setlocale('LC_ALL', 0);
   // END REDUNDANT
   return text.search(this.php_js.locales[this.php_js.localeCategories.LC_CTYPE].LC_CTYPE.gr) !== -1;
 }

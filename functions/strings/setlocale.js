@@ -1,20 +1,21 @@
 function setlocale(category, locale) {
-  // From: http://phpjs.org/functions
-  // +   original by: Brett Zamir (http://brett-zamir.me)
-  // +   derived from: Blues at http://hacks.bluesmoon.info/strftime/strftime.js
-  // +   derived from: YUI Library: http://developer.yahoo.com/yui/docs/YAHOO.util.DateLocale.html
-  // -    depends on: getenv
-  // %          note 1: Is extensible, but currently only implements locales en,
-  // %          note 1: en_US, en_GB, en_AU, fr, and fr_CA for LC_TIME only; C for LC_CTYPE;
-  // %          note 1: C and en for LC_MONETARY/LC_NUMERIC; en for LC_COLLATE
-  // %          note 2: Uses global: php_js to store locale info
-  // %          note 3: Consider using http://demo.icu-project.org/icu-bin/locexp as basis for localization (as in i18n_loc_set_default())
-  // *     example 1: setlocale('LC_ALL', 'en_US');
-  // *     returns 1: 'en_US'
+  //  discuss at: http://phpjs.org/functions/setlocale/
+  // original by: Brett Zamir (http://brett-zamir.me)
+  // original by: Blues at http://hacks.bluesmoon.info/strftime/strftime.js
+  // original by: YUI Library: http://developer.yahoo.com/yui/docs/YAHOO.util.DateLocale.html
+  //  depends on: getenv
+  //        note: Is extensible, but currently only implements locales en,
+  //        note: en_US, en_GB, en_AU, fr, and fr_CA for LC_TIME only; C for LC_CTYPE;
+  //        note: C and en for LC_MONETARY/LC_NUMERIC; en for LC_COLLATE
+  //        note: Uses global: php_js to store locale info
+  //        note: Consider using http://demo.icu-project.org/icu-bin/locexp as basis for localization (as in i18n_loc_set_default())
+  //   example 1: setlocale('LC_ALL', 'en_US');
+  //   returns 1: 'en_US'
+
   var categ = '',
-      cats = [],
-      i = 0,
-      d = this.window.document;
+    cats = [],
+    i = 0,
+    d = this.window.document;
 
   // BEGIN STATIC
   var _copy = function _copy(orig) {
@@ -42,57 +43,79 @@ function setlocale(category, locale) {
   // Need to look into http://cldr.unicode.org/ (maybe future JavaScript); Dojo has some functions (under new BSD),
   // including JSON conversions of LDML XML from CLDR: http://bugs.dojotoolkit.org/browser/dojo/trunk/cldr
   // and docs at http://api.dojotoolkit.org/jsdoc/HEAD/dojo.cldr
-  var _nplurals1 = function(n) { // e.g., Japanese
+  var _nplurals1 = function (n) {
+    // e.g., Japanese
     return 0;
   };
-  var _nplurals2a = function(n) { // e.g., English
+  var _nplurals2a = function (n) {
+    // e.g., English
     return n !== 1 ? 1 : 0;
   };
-  var _nplurals2b = function(n) { // e.g., French
+  var _nplurals2b = function (n) {
+    // e.g., French
     return n > 1 ? 1 : 0;
   };
-  var _nplurals2c = function(n) { // e.g., Icelandic (MDC)
+  var _nplurals2c = function (n) {
+    // e.g., Icelandic (MDC)
     return n % 10 === 1 && n % 100 !== 11 ? 0 : 1;
   };
-  var _nplurals3a = function(n) { // e.g., Latvian (MDC has a different order from gettext)
+  var _nplurals3a = function (n) {
+    // e.g., Latvian (MDC has a different order from gettext)
     return n % 10 === 1 && n % 100 !== 11 ? 0 : n !== 0 ? 1 : 2;
   };
-  var _nplurals3b = function(n) { // e.g., Scottish Gaelic
+  var _nplurals3b = function (n) {
+    // e.g., Scottish Gaelic
     return n === 1 ? 0 : n === 2 ? 1 : 2;
   };
-  var _nplurals3c = function(n) { // e.g., Romanian
+  var _nplurals3c = function (n) {
+    // e.g., Romanian
     return n === 1 ? 0 : (n === 0 || (n % 100 > 0 && n % 100 < 20)) ? 1 : 2;
   };
-  var _nplurals3d = function(n) { // e.g., Lithuanian (MDC has a different order from gettext)
+  var _nplurals3d = function (n) {
+    // e.g., Lithuanian (MDC has a different order from gettext)
     return n % 10 === 1 && n % 100 !== 11 ? 0 : n % 10 >= 2 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2;
   };
-  var _nplurals3e = function(n) { // e.g., Croatian
-    return n % 10 === 1 && n % 100 !== 11 ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2;
+  var _nplurals3e = function (n) {
+    // e.g., Croatian
+    return n % 10 === 1 && n % 100 !== 11 ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 :
+      2;
   };
-  var _nplurals3f = function(n) { // e.g., Slovak
+  var _nplurals3f = function (n) {
+    // e.g., Slovak
     return n === 1 ? 0 : n >= 2 && n <= 4 ? 1 : 2;
   };
-  var _nplurals3g = function(n) { // e.g., Polish
+  var _nplurals3g = function (n) {
+    // e.g., Polish
     return n === 1 ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2;
   };
-  var _nplurals3h = function(n) { // e.g., Macedonian (MDC)
+  var _nplurals3h = function (n) {
+    // e.g., Macedonian (MDC)
     return n % 10 === 1 ? 0 : n % 10 === 2 ? 1 : 2;
   };
-  var _nplurals4a = function(n) { // e.g., Slovenian
+  var _nplurals4a = function (n) {
+    // e.g., Slovenian
     return n % 100 === 1 ? 0 : n % 100 === 2 ? 1 : n % 100 === 3 || n % 100 === 4 ? 2 : 3;
   };
-  var _nplurals4b = function(n) { // e.g., Maltese (MDC)
+  var _nplurals4b = function (n) {
+    // e.g., Maltese (MDC)
     return n === 1 ? 0 : n === 0 || (n % 100 && n % 100 <= 10) ? 1 : n % 100 >= 11 && n % 100 <= 19 ? 2 : 3;
   };
-  var _nplurals5 = function(n) { // e.g., Irish Gaeilge (MDC)
+  var _nplurals5 = function (n) {
+    // e.g., Irish Gaeilge (MDC)
     return n === 1 ? 0 : n === 2 ? 1 : n >= 3 && n <= 6 ? 2 : n >= 7 && n <= 10 ? 3 : 4;
   };
-  var _nplurals6 = function(n) { // e.g., Arabic (MDC) - Per MDC puts 0 as last group
-    return n === 0 ? 5 : n === 1 ? 0 : n === 2 ? 1 : n % 100 >= 3 && n % 100 <= 10 ? 2 : n % 100 >= 11 && n % 100 <= 99 ? 3 : 4;
+  var _nplurals6 = function (n) {
+    // e.g., Arabic (MDC) - Per MDC puts 0 as last group
+    return n === 0 ? 5 : n === 1 ? 0 : n === 2 ? 1 : n % 100 >= 3 && n % 100 <= 10 ? 2 : n % 100 >= 11 && n % 100 <=
+      99 ? 3 : 4;
   };
   // END STATIC
   // BEGIN REDUNDANT
-  this.php_js = this.php_js || {};
+  try {
+    this.php_js = this.php_js || {};
+  } catch (e) {
+    this.php_js = {};
+  }
 
   var phpjs = this.php_js;
 
@@ -106,11 +129,12 @@ function setlocale(category, locale) {
     phpjs.locales.en = {
       'LC_COLLATE': // For strcoll
 
-
-          function(str1, str2) { // Fix: This one taken from strcmp, but need for other locales; we don't use localeCompare since its locale is not settable
-            return (str1 == str2) ? 0 : ((str1 > str2) ? 1 : -1);
-          },
-      'LC_CTYPE': { // Need to change any of these for English as opposed to C?
+      function (str1, str2) {
+        // Fix: This one taken from strcmp, but need for other locales; we don't use localeCompare since its locale is not settable
+        return (str1 == str2) ? 0 : ((str1 > str2) ? 1 : -1);
+      },
+      'LC_CTYPE': {
+        // Need to change any of these for English as opposed to C?
         an: /^[A-Za-z\d]+$/g,
         al: /^[A-Za-z]+$/g,
         ct: /^[\u0000-\u001F\u007F]+$/g,
@@ -127,14 +151,17 @@ function setlocale(category, locale) {
         lower: 'abcdefghijklmnopqrstuvwxyz',
         upper: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
       },
-      'LC_TIME': { // Comments include nl_langinfo() constant equivalents and any changes from Blues' implementation
+      'LC_TIME': {
+        // Comments include nl_langinfo() constant equivalents and any changes from Blues' implementation
         a: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
         // ABDAY_
         A: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
         // DAY_
         b: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         // ABMON_
-        B: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        B: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
+          'November', 'December'
+        ],
         // MON_
         c: '%a %d %b %Y %r %Z',
         // D_T_FMT // changed %T to %r per results
@@ -159,7 +186,8 @@ function setlocale(category, locale) {
       },
       // Assuming distinction between numeric and monetary is thus:
       // See below for C locale
-      'LC_MONETARY': { // Based on Windows "english" (English_United States.1252) locale
+      'LC_MONETARY': {
+        // original by Windows "english" (English_United States.1252) locale
         int_curr_symbol: 'USD',
         currency_symbol: '$',
         mon_decimal_point: '.',
@@ -183,7 +211,8 @@ function setlocale(category, locale) {
         // 0: parentheses surround quantity and curr. symbol; 1: sign precedes them; 2: sign follows them; 3: sign immed. precedes curr. symbol; 4: sign immed. succeeds curr. symbol
         n_sign_posn: 0 // see p_sign_posn
       },
-      'LC_NUMERIC': { // Based on Windows "english" (English_United States.1252) locale
+      'LC_NUMERIC': {
+        // original by Windows "english" (English_United States.1252) locale
         decimal_point: '.',
         thousands_sep: ',',
         grouping: [3] // see mon_grouping, but for non-monetary values (use thousands_sep)
@@ -200,7 +229,7 @@ function setlocale(category, locale) {
     phpjs.locales.en_US.LC_TIME.c = '%a %d %b %Y %r %Z';
     phpjs.locales.en_US.LC_TIME.x = '%D';
     phpjs.locales.en_US.LC_TIME.X = '%r';
-    // The following are based on *nix settings
+    // The following are original by *nix settings
     phpjs.locales.en_US.LC_MONETARY.int_curr_symbol = 'USD ';
     phpjs.locales.en_US.LC_MONETARY.p_sign_posn = 1;
     phpjs.locales.en_US.LC_MONETARY.n_sign_posn = 1;
@@ -212,7 +241,8 @@ function setlocale(category, locale) {
     phpjs.locales.en_GB.LC_TIME.r = '%l:%M:%S %P %Z';
 
     phpjs.locales.en_AU = _copy(phpjs.locales.en_GB);
-    phpjs.locales.C = _copy(phpjs.locales.en); // Assume C locale is like English (?) (We need C locale for LC_CTYPE)
+    // Assume C locale is like English (?) (We need C locale for LC_CTYPE)
+    phpjs.locales.C = _copy(phpjs.locales.en);
     phpjs.locales.C.LC_CTYPE.CODESET = 'ANSI_X3.4-1968';
     phpjs.locales.C.LC_MONETARY = {
       int_curr_symbol: '',
@@ -236,9 +266,12 @@ function setlocale(category, locale) {
       thousands_sep: '',
       grouping: []
     };
-    phpjs.locales.C.LC_TIME.c = '%a %b %e %H:%M:%S %Y'; // D_T_FMT
-    phpjs.locales.C.LC_TIME.x = '%m/%d/%y'; // D_FMT
-    phpjs.locales.C.LC_TIME.X = '%H:%M:%S'; // T_FMT
+    // D_T_FMT
+    phpjs.locales.C.LC_TIME.c = '%a %b %e %H:%M:%S %Y';
+    // D_FMT
+    phpjs.locales.C.LC_TIME.x = '%m/%d/%y';
+    // T_FMT
+    phpjs.locales.C.LC_TIME.X = '%H:%M:%S';
     phpjs.locales.C.LC_MESSAGES.YESEXPR = '^[yY]';
     phpjs.locales.C.LC_MESSAGES.NOEXPR = '^[nN]';
 
@@ -246,8 +279,12 @@ function setlocale(category, locale) {
     phpjs.locales.fr.nplurals = _nplurals2b;
     phpjs.locales.fr.LC_TIME.a = ['dim', 'lun', 'mar', 'mer', 'jeu', 'ven', 'sam'];
     phpjs.locales.fr.LC_TIME.A = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
-    phpjs.locales.fr.LC_TIME.b = ['jan', 'f\u00E9v', 'mar', 'avr', 'mai', 'jun', 'jui', 'ao\u00FB', 'sep', 'oct', 'nov', 'd\u00E9c'];
-    phpjs.locales.fr.LC_TIME.B = ['janvier', 'f\u00E9vrier', 'mars', 'avril', 'mai', 'juin', 'juillet', 'ao\u00FBt', 'septembre', 'octobre', 'novembre', 'd\u00E9cembre'];
+    phpjs.locales.fr.LC_TIME.b = ['jan', 'f\u00E9v', 'mar', 'avr', 'mai', 'jun', 'jui', 'ao\u00FB', 'sep', 'oct',
+      'nov', 'd\u00E9c'
+    ];
+    phpjs.locales.fr.LC_TIME.B = ['janvier', 'f\u00E9vrier', 'mars', 'avril', 'mai', 'juin', 'juillet', 'ao\u00FBt',
+      'septembre', 'octobre', 'novembre', 'd\u00E9cembre'
+    ];
     phpjs.locales.fr.LC_TIME.c = '%a %d %b %Y %T %Z';
     phpjs.locales.fr.LC_TIME.p = ['', ''];
     phpjs.locales.fr.LC_TIME.P = ['', ''];
@@ -262,16 +299,19 @@ function setlocale(category, locale) {
     var NS_XHTML = 'http://www.w3.org/1999/xhtml';
     var NS_XML = 'http://www.w3.org/XML/1998/namespace';
     if (d.getElementsByTagNameNS && d.getElementsByTagNameNS(NS_XHTML, 'html')[0]) {
-      if (d.getElementsByTagNameNS(NS_XHTML, 'html')[0].getAttributeNS && d.getElementsByTagNameNS(NS_XHTML, 'html')[0].getAttributeNS(NS_XML, 'lang')) {
+      if (d.getElementsByTagNameNS(NS_XHTML, 'html')[0].getAttributeNS && d.getElementsByTagNameNS(NS_XHTML,
+        'html')[0].getAttributeNS(NS_XML, 'lang')) {
         phpjs.locale = d.getElementsByTagName(NS_XHTML, 'html')[0].getAttributeNS(NS_XML, 'lang');
-      } else if (d.getElementsByTagNameNS(NS_XHTML, 'html')[0].lang) { // XHTML 1.0 only
+      } else if (d.getElementsByTagNameNS(NS_XHTML, 'html')[0].lang) {
+        // XHTML 1.0 only
         phpjs.locale = d.getElementsByTagNameNS(NS_XHTML, 'html')[0].lang;
       }
     } else if (d.getElementsByTagName('html')[0] && d.getElementsByTagName('html')[0].lang) {
       phpjs.locale = d.getElementsByTagName('html')[0].lang;
     }
   }
-  phpjs.locale = phpjs.locale.replace('-', '_'); // PHP-style
+  // PHP-style
+  phpjs.locale = phpjs.locale.replace('-', '_');
   // Fix locale if declared locale hasn't been defined
   if (!(phpjs.locale in phpjs.locales)) {
     if (phpjs.locale.replace(/_[a-zA-Z]+$/, '') in phpjs.locales) {
@@ -301,7 +341,8 @@ function setlocale(category, locale) {
     for (i = 0; i < locale.length; i++) {
       if (!(locale[i] in this.php_js.locales)) {
         if (i === locale.length - 1) {
-          return false; // none found
+          // none found
+          return false;
         }
         continue;
       }
@@ -314,7 +355,8 @@ function setlocale(category, locale) {
   if (locale === '0' || locale === 0) {
     if (category === 'LC_ALL') {
       for (categ in this.php_js.localeCategories) {
-        cats.push(categ + '=' + this.php_js.localeCategories[categ]); // Add ".UTF-8" or allow ".@latint", etc. to the end?
+        // Add ".UTF-8" or allow ".@latint", etc. to the end?
+        cats.push(categ + '=' + this.php_js.localeCategories[categ]);
       }
       return cats.join(';');
     }
@@ -322,7 +364,8 @@ function setlocale(category, locale) {
   }
 
   if (!(locale in this.php_js.locales)) {
-    return false; // Locale not found
+    // Locale not found
+    return false;
   }
 
   // Set and get locale

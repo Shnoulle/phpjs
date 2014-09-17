@@ -1,14 +1,16 @@
 function realpath(path) {
-  // From: http://phpjs.org/functions
-  // +   original by: mk.keck
-  // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-  // %        note 1: Returned path is an url like e.g. 'http://yourhost.tld/path/'
-  // *     example 1: realpath('../.././_supporters/pj_test_supportfile_1.htm');
-  // *     returns 1: 'file:/home/kevin/workspace/_supporters/pj_test_supportfile_1.htm'
+  //  discuss at: http://phpjs.org/functions/realpath/
+  // original by: mk.keck
+  // improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+  //        note: Returned path is an url like e.g. 'http://yourhost.tld/path/'
+  //   example 1: realpath('../.././_supporters/pj_test_supportfile_1.htm');
+  //   returns 1: 'file:/home/kevin/workspace/_supporters/pj_test_supportfile_1.htm'
+
   var p = 0,
-      arr = []; /* Save the root, if not given */
+    arr = []; /* Save the root, if not given */
   var r = this.window.location.href; /* Avoid input failures */
-  path = (path + '').replace('\\', '/'); /* Check if there's a port in path (like 'http://') */
+  path = (path + '')
+    .replace('\\', '/'); /* Check if there's a port in path (like 'http://') */
   if (path.indexOf('://') !== -1) {
     p = 1;
   } /* Ok, there's not a port in path, so let's take the root */

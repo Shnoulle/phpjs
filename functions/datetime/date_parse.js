@@ -1,9 +1,9 @@
 function date_parse(date) {
-  // From: http://phpjs.org/functions
-  // +   original by: Brett Zamir (http://brett-zamir.me)
-  // -    depends on: strtotime
-  // *     example 1: date_parse('2006-12-12 10:00:00.5');
-  // *     returns 1: {year : 2006, month: 12, day: 12, hour: 10, minute: 0, second: 0, fraction: 0.5, warning_count: 0, warnings: [], error_count: 0, errors: [], is_localtime: false}
+  //  discuss at: http://phpjs.org/functions/date_parse/
+  // original by: Brett Zamir (http://brett-zamir.me)
+  //  depends on: strtotime
+  //   example 1: date_parse('2006-12-12 10:00:00.5');
+  //   returns 1: {year : 2006, month: 12, day: 12, hour: 10, minute: 0, second: 0, fraction: 0.5, warning_count: 0, warnings: [], error_count: 0, errors: [], is_localtime: false}
 
   // BEGIN REDUNDANT
   this.php_js = this.php_js || {};
@@ -14,7 +14,8 @@ function date_parse(date) {
     errorsOffset = this.php_js.errors ? this.php_js.errors.length : null;
 
   try {
-    this.php_js.date_parse_state = true; // Allow strtotime to return a decimal (which it normally does not)
+    // Allow strtotime to return a decimal (which it normally does not)
+    this.php_js.date_parse_state = true;
     ts = this.strtotime(date);
     this.php_js.date_parse_state = false;
   } finally {
@@ -25,10 +26,13 @@ function date_parse(date) {
 
   var dt = new Date(ts * 1000);
 
-  var retObj = { // Grab any new warnings or errors added (not implemented yet in strtotime()); throwing warnings, notices, or errors could also be easily monitored by using 'watch' on this.php_js.latestWarning, etc. and/or calling any defined error handlers
-    warning_count: warningsOffset !== null ? this.php_js.warnings.slice(warningsOffset).length : 0,
+  var retObj = {
+    // Grab any new warnings or errors added (not implemented yet in strtotime()); throwing warnings, notices, or errors could also be easily monitored by using 'watch' on this.php_js.latestWarning, etc. and/or calling any defined error handlers
+    warning_count: warningsOffset !== null ? this.php_js.warnings.slice(warningsOffset)
+      .length : 0,
     warnings: warningsOffset !== null ? this.php_js.warnings.slice(warningsOffset) : [],
-    error_count: errorsOffset !== null ? this.php_js.errors.slice(errorsOffset).length : 0,
+    error_count: errorsOffset !== null ? this.php_js.errors.slice(errorsOffset)
+      .length : 0,
     errors: errorsOffset !== null ? this.php_js.errors.slice(errorsOffset) : []
   };
   retObj.year = dt.getFullYear();

@@ -1,10 +1,11 @@
 function rand(min, max) {
-  // From: http://phpjs.org/functions
-  // +   original by: Leslie Hoare
-  // +   bugfixed by: Onno Marsman
-  // %          note 1: See the commented out code below for a version which will work with our experimental (though probably unnecessary) srand() function)
-  // *     example 1: rand(1, 1);
-  // *     returns 1: 1
+  //  discuss at: http://phpjs.org/functions/rand/
+  // original by: Leslie Hoare
+  // bugfixed by: Onno Marsman
+  //        note: See the commented out code below for a version which will work with our experimental (though probably unnecessary) srand() function)
+  //   example 1: rand(1, 1);
+  //   returns 1: 1
+
   var argc = arguments.length;
   if (argc === 0) {
     min = 0;
@@ -20,7 +21,8 @@ function rand(min, max) {
   // +   reimplemented by: Brett Zamir (http://brett-zamir.me)
   // -    depends on: srand
   // %          note 1: This is a very possibly imperfect adaptation from the PHP source code
-  var rand_seed, ctx, PHP_RAND_MAX=2147483647; // 0x7fffffff
+  // 0x7fffffff
+  var rand_seed, ctx, PHP_RAND_MAX=2147483647;
 
   if (!this.php_js || this.php_js.rand_seed === undefined) {
     this.srand();
@@ -36,7 +38,8 @@ function rand(min, max) {
     return ((ctx * 1103515245 + 12345) % (PHP_RAND_MAX + 1));
   };
 
-  var php_rand = function (ctxArg) { // php_rand_r
+  var php_rand = function (ctxArg) {
+   // php_rand_r
     this.php_js.rand_seed = do_rand(ctxArg);
     return parseInt(this.php_js.rand_seed, 10);
   };

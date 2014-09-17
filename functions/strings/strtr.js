@@ -1,38 +1,39 @@
 function strtr(str, from, to) {
-  // From: http://phpjs.org/functions
-  // +   original by: Brett Zamir (http://brett-zamir.me)
-  // +      input by: uestla
-  // +   bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-  // +      input by: Alan C
-  // +   bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-  // +      input by: Taras Bogach
-  // +   bugfixed by: Brett Zamir (http://brett-zamir.me)
-  // +      input by: jpfle
-  // +   bugfixed by: Brett Zamir (http://brett-zamir.me)
-  // -   depends on: krsort
-  // -   depends on: ini_set
-  // *     example 1: $trans = {'hello' : 'hi', 'hi' : 'hello'};
-  // *     example 1: strtr('hi all, I said hello', $trans)
-  // *     returns 1: 'hello all, I said hi'
-  // *     example 2: strtr('äaabaåccasdeöoo', 'äåö','aao');
-  // *     returns 2: 'aaabaaccasdeooo'
-  // *     example 3: strtr('ääääääää', 'ä', 'a');
-  // *     returns 3: 'aaaaaaaa'
-  // *     example 4: strtr('http', 'pthxyz','xyzpth');
-  // *     returns 4: 'zyyx'
-  // *     example 5: strtr('zyyx', 'pthxyz','xyzpth');
-  // *     returns 5: 'http'
-  // *     example 6: strtr('aa', {'a':1,'aa':2});
-  // *     returns 6: '2'
+  //  discuss at: http://phpjs.org/functions/strtr/
+  // original by: Brett Zamir (http://brett-zamir.me)
+  //    input by: uestla
+  //    input by: Alan C
+  //    input by: Taras Bogach
+  //    input by: jpfle
+  // bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+  // bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+  // bugfixed by: Brett Zamir (http://brett-zamir.me)
+  // bugfixed by: Brett Zamir (http://brett-zamir.me)
+  //  depends on: krsort
+  //  depends on: ini_set
+  //   example 1: $trans = {'hello' : 'hi', 'hi' : 'hello'};
+  //   example 1: strtr('hi all, I said hello', $trans)
+  //   returns 1: 'hello all, I said hi'
+  //   example 2: strtr('äaabaåccasdeöoo', 'äåö','aao');
+  //   returns 2: 'aaabaaccasdeooo'
+  //   example 3: strtr('ääääääää', 'ä', 'a');
+  //   returns 3: 'aaaaaaaa'
+  //   example 4: strtr('http', 'pthxyz','xyzpth');
+  //   returns 4: 'zyyx'
+  //   example 5: strtr('zyyx', 'pthxyz','xyzpth');
+  //   returns 5: 'http'
+  //   example 6: strtr('aa', {'a':1,'aa':2});
+  //   returns 6: '2'
+
   var fr = '',
-      i = 0,
-      j = 0,
-      lenStr = 0,
-      lenFrom = 0,
-      tmpStrictForIn = false,
-      fromTypeStr = '',
-      toTypeStr = '',
-      istr = '';
+    i = 0,
+    j = 0,
+    lenStr = 0,
+    lenFrom = 0,
+    tmpStrictForIn = false,
+    fromTypeStr = '',
+    toTypeStr = '',
+    istr = '';
   var tmpFrom = [];
   var tmpTo = [];
   var ret = '';
@@ -41,7 +42,8 @@ function strtr(str, from, to) {
   // Received replace_pairs?
   // Convert to normal from->to chars
   if (typeof from === 'object') {
-    tmpStrictForIn = this.ini_set('phpjs.strictForIn', false); // Not thread-safe; temporarily set to true
+    // Not thread-safe; temporarily set to true
+    tmpStrictForIn = this.ini_set('phpjs.strictForIn', false);
     from = this.krsort(from);
     this.ini_set('phpjs.strictForIn', tmpStrictForIn);
 

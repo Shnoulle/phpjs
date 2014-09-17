@@ -1,33 +1,36 @@
 function strlen(string) {
-  // From: http://phpjs.org/functions
-  // +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-  // +   improved by: Sakimori
-  // +      input by: Kirk Strobeck
-  // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-  // +   bugfixed by: Onno Marsman
-  // +    revised by: Brett Zamir (http://brett-zamir.me)
-  // %        note 1: May look like overkill, but in order to be truly faithful to handling all Unicode
-  // %        note 1: characters and to this function in PHP which does not count the number of bytes
-  // %        note 1: but counts the number of characters, something like this is really necessary.
-  // *     example 1: strlen('Kevin van Zonneveld');
-  // *     returns 1: 19
-  // *     example 2: ini_set('unicode.semantics', 'on');
-  // *     example 2: strlen('A\ud87e\udc04Z');
-  // *     returns 2: 3
+  //  discuss at: http://phpjs.org/functions/strlen/
+  // original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+  // improved by: Sakimori
+  // improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+  //    input by: Kirk Strobeck
+  // bugfixed by: Onno Marsman
+  //  revised by: Brett Zamir (http://brett-zamir.me)
+  //        note: May look like overkill, but in order to be truly faithful to handling all Unicode
+  //        note: characters and to this function in PHP which does not count the number of bytes
+  //        note: but counts the number of characters, something like this is really necessary.
+  //   example 1: strlen('Kevin van Zonneveld');
+  //   returns 1: 19
+  //   example 2: ini_set('unicode.semantics', 'on');
+  //   example 2: strlen('A\ud87e\udc04Z');
+  //   returns 2: 3
+
   var str = string + '';
   var i = 0,
-      chr = '',
-      lgth = 0;
+    chr = '',
+    lgth = 0;
 
-  if (!this.php_js || !this.php_js.ini || !this.php_js.ini['unicode.semantics'] || this.php_js.ini['unicode.semantics'].local_value.toLowerCase() !== 'on') {
+  if (!this.php_js || !this.php_js.ini || !this.php_js.ini['unicode.semantics'] || this.php_js.ini[
+    'unicode.semantics'].local_value.toLowerCase() !== 'on') {
     return string.length;
   }
 
-  var getWholeChar = function(str, i) {
+  var getWholeChar = function (str, i) {
     var code = str.charCodeAt(i);
     var next = '',
-        prev = '';
-    if (0xD800 <= code && code <= 0xDBFF) { // High surrogate (could change last hex to 0xDB7F to treat high private surrogates as single characters)
+      prev = '';
+    if (0xD800 <= code && code <= 0xDBFF) {
+      // High surrogate (could change last hex to 0xDB7F to treat high private surrogates as single characters)
       if (str.length <= (i + 1)) {
         throw 'High surrogate without following low surrogate';
       }
@@ -36,15 +39,18 @@ function strlen(string) {
         throw 'High surrogate without following low surrogate';
       }
       return str.charAt(i) + str.charAt(i + 1);
-    } else if (0xDC00 <= code && code <= 0xDFFF) { // Low surrogate
+    } else if (0xDC00 <= code && code <= 0xDFFF) {
+      // Low surrogate
       if (i === 0) {
         throw 'Low surrogate without preceding high surrogate';
       }
       prev = str.charCodeAt(i - 1);
-      if (0xD800 > prev || prev > 0xDBFF) { //(could change last hex to 0xDB7F to treat high private surrogates as single characters)
+      if (0xD800 > prev || prev > 0xDBFF) {
+        //(could change last hex to 0xDB7F to treat high private surrogates as single characters)
         throw 'Low surrogate without preceding high surrogate';
       }
-      return false; // We can pass over low surrogates now as the second component in a pair which we have already processed
+      // We can pass over low surrogates now as the second component in a pair which we have already processed
+      return false;
     }
     return str.charAt(i);
   };

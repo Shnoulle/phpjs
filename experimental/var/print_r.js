@@ -8,6 +8,7 @@ function print_r(array, return_val) {
   // -    depends on: echo
   // *     example 1: print_r(1, true);
   // *     returns 1: 1
+
   var output = '',
       pad_char = ' ',
       pad_val = 4,

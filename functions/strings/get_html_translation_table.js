@@ -1,30 +1,31 @@
 function get_html_translation_table(table, quote_style) {
-  // From: http://phpjs.org/functions
-  // +   original by: Philip Peterson
-  // +    revised by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-  // +   bugfixed by: noname
-  // +   bugfixed by: Alex
-  // +   bugfixed by: Marco
-  // +   bugfixed by: madipta
-  // +   improved by: KELAN
-  // +   improved by: Brett Zamir (http://brett-zamir.me)
-  // +   bugfixed by: Brett Zamir (http://brett-zamir.me)
-  // +      input by: Frank Forte
-  // +   bugfixed by: T.Wild
-  // +      input by: Ratheous
-  // %          note: It has been decided that we're not going to add global
-  // %          note: dependencies to php.js, meaning the constants are not
-  // %          note: real constants, but strings instead. Integers are also supported if someone
-  // %          note: chooses to create the constants themselves.
-  // *     example 1: get_html_translation_table('HTML_SPECIALCHARS');
-  // *     returns 1: {'"': '&quot;', '&': '&amp;', '<': '&lt;', '>': '&gt;'}
+  //  discuss at: http://phpjs.org/functions/get_html_translation_table/
+  // original by: Philip Peterson
+  //  revised by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+  // bugfixed by: noname
+  // bugfixed by: Alex
+  // bugfixed by: Marco
+  // bugfixed by: madipta
+  // bugfixed by: Brett Zamir (http://brett-zamir.me)
+  // bugfixed by: T.Wild
+  // improved by: KELAN
+  // improved by: Brett Zamir (http://brett-zamir.me)
+  //    input by: Frank Forte
+  //    input by: Ratheous
+  //        note: It has been decided that we're not going to add global
+  //        note: dependencies to php.js, meaning the constants are not
+  //        note: real constants, but strings instead. Integers are also supported if someone
+  //        note: chooses to create the constants themselves.
+  //   example 1: get_html_translation_table('HTML_SPECIALCHARS');
+  //   returns 1: {'"': '&quot;', '&': '&amp;', '<': '&lt;', '>': '&gt;'}
+
   var entities = {},
-      hash_map = {},
-      decimal;
+    hash_map = {},
+    decimal;
   var constMappingTable = {},
-      constMappingQuoteStyle = {};
+    constMappingQuoteStyle = {};
   var useTable = {},
-      useQuoteStyle = {};
+    useQuoteStyle = {};
 
   // Translate arguments
   constMappingTable[0] = 'HTML_SPECIALCHARS';
@@ -34,7 +35,8 @@ function get_html_translation_table(table, quote_style) {
   constMappingQuoteStyle[3] = 'ENT_QUOTES';
 
   useTable = !isNaN(table) ? constMappingTable[table] : table ? table.toUpperCase() : 'HTML_SPECIALCHARS';
-  useQuoteStyle = !isNaN(quote_style) ? constMappingQuoteStyle[quote_style] : quote_style ? quote_style.toUpperCase() : 'ENT_COMPAT';
+  useQuoteStyle = !isNaN(quote_style) ? constMappingQuoteStyle[quote_style] : quote_style ? quote_style.toUpperCase() :
+    'ENT_COMPAT';
 
   if (useTable !== 'HTML_SPECIALCHARS' && useTable !== 'HTML_ENTITIES') {
     throw new Error('Table: ' + useTable + ' not supported');
@@ -149,7 +151,6 @@ function get_html_translation_table(table, quote_style) {
   }
   entities['60'] = '&lt;';
   entities['62'] = '&gt;';
-
 
   // ascii decimals to real symbols
   for (decimal in entities) {

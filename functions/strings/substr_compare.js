@@ -1,9 +1,10 @@
 function substr_compare(main_str, str, offset, length, case_insensitivity) {
-  // From: http://phpjs.org/functions
-  // +   original by: Brett Zamir (http://brett-zamir.me)
-  // +   derived from: strcasecmp, strcmp
-  // *     example 1: substr_compare("abcde", "bc", 1, 2);
-  // *     returns 1: 0
+  //  discuss at: http://phpjs.org/functions/substr_compare/
+  // original by: Brett Zamir (http://brett-zamir.me)
+  // original by: strcasecmp, strcmp
+  //   example 1: substr_compare("abcde", "bc", 1, 2);
+  //   returns 1: 0
+
   if (!offset && offset !== 0) {
     throw 'Missing offset for substr_compare()';
   }
@@ -18,10 +19,14 @@ function substr_compare(main_str, str, offset, length, case_insensitivity) {
   length = length || main_str.length - offset;
 
   main_str = main_str.substr(offset, length);
-  str = str.substr(0, length); // Should only compare up to the desired length
-  if (case_insensitivity) { // Works as strcasecmp
-    main_str = (main_str + '').toLowerCase();
-    str = (str + '').toLowerCase();
+  // Should only compare up to the desired length
+  str = str.substr(0, length);
+  if (case_insensitivity) {
+    // Works as strcasecmp
+    main_str = (main_str + '')
+      .toLowerCase();
+    str = (str + '')
+      .toLowerCase();
     if (main_str == str) {
       return 0;
     }

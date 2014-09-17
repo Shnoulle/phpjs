@@ -7,21 +7,38 @@ setup:
 	cd .. ; \
 
 test:
-	#node tests/cli.js --debug --abort # To abort at first failure
-	cd tests && npm install
-	node tests/cli.js --debug
+	ulimit -n 1024 ||true
+	npm install
+	make build
+	./node_modules/.bin/mocha --reporter list
+	node bin/phpjs.js --action test --debug
 
-# Apply code standards
+# Apply code standards & reformat headers
 cleanup:
-	@[ -x `which gjslint` ] || sudo easy_install http://closure-linter.googlecode.com/files/closure_linter-latest.tar.gz
-	fixjsstyle \
-		--recurse ./ \
-		--exclude_directories _octopress,experimental,workbench,tests/node_modules,tools \
-		--max_line_length 100 \
-		--nojsdoc \
-		--error_trace \
-		--strict \
-		--jslint_error all
+	node bin/phpjs.js --action cleanup
+
+serve:
+	python -m SimpleHTTPServer
+
+test-cleanup:
+	node bin/phpjs.js --action cleanup --name array_change_key_case
+	node bin/phpjs.js --action cleanup --name echo
+	git diff functions/array/array_change_key_case.js
+	git diff functions/strings/echo.js
+	git checkout -- functions/array/array_change_key_case.js
+	git checkout -- functions/strings/echo.js
+
+npm:
+	node bin/phpjs.js --action buildnpm --output build/npm.js
+	ls -al build/npm.js
+	node build/npm.js
+	node test/npm/npm.js
+	echo "Build success. "
+
+publish: npm
+	npm publish
+
+build: npm
 
 hook:
 	mkdir -p ~/.gittemplate/hooks
@@ -41,8 +58,8 @@ site:
 	bundle exec rake generate && \
 	bundle exec rake deploy ; \
 	cd .. ; \
-	git add . ; \
-	git commit -am "Update site" ; \
+	git add --all . ; \
+	git commit -anm "Update site" ; \
 	git push origin master
 
 site-clean:
@@ -59,4 +76,4 @@ site-preview:
 	bundle exec rake preview ; \
 	cd ..
 
-.PHONY: site%
+.PHONY: setup test cleanup npm publish build hook site%
